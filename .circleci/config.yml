@@ -1,0 +1,108 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+
+defaults: &defaults
+    docker:
+      # specify the version you desire here
+       - image: circleci/ruby:2.5.1-node-browsers
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
+references:
+  - restore_code: &restore_code
+      restore_cache:
+        key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+  - restore_dependencies: &restore_dependencies
+      restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-
+  - bundle_path: &bundle_path
+      run: bundle --path vendor/bundle
+
+
+jobs:
+  checkout_code:
+    <<: *defaults
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+
+  build_dependencies:
+    <<: *defaults
+
+    steps:
+      - *restore_code
+      - *restore_dependencies
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+        
+      # Database setup
+   #   - run: bundle exec rake db:create
+   #   - run: bundle exec rake db:schema:load
+  test:         
+    <<: *defaults
+
+    steps:
+      - *restore_code
+      - *restore_dependencies
+      - *bundle_path
+      - run:
+          name: rspec
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob 'spec/**/*_spec.rb' | circleci tests split --split-by=timings)"
+            
+            bundle exec rspec --format progress \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+  lint:
+    <<: *defaults
+    steps:
+      - *restore_code
+      - *restore_dependencies
+      - *bundle_path
+      - run: bundle exec rubocop
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - checkout_code
+      - build_dependencies:
+          requires:
+            - checkout_code
+      - test:
+          requires:
+            - build_dependencies
+      - lint:
+          requires:
+            - build_dependencies
