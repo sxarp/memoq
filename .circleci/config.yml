@@ -71,6 +71,7 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "Gemfile.lock" }}
           - v1-dependencies-
+      - run: bundle --path vendor/bundle
       - run:
           name: rspec
           command: |
