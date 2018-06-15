@@ -4,7 +4,7 @@
 #
 version: 2
 
-default: &default
+defaults: &defaults
     docker:
       # specify the version you desire here
        - image: circleci/ruby:2.5.1-node-browsers
@@ -30,7 +30,7 @@ references:
 
 jobs:
   checkout_code:
-    <<: *default
+    <<: *defaults
     steps:
       - checkout
       - save_cache:
@@ -39,10 +39,11 @@ jobs:
             - ./
 
   build_dependencies:
-    <<: *default
+    <<: *defaults
 
     steps:
-      - *restore_code
+      - restore_cache: &restore_code
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
 
       - restore_cache:
           keys:
@@ -63,7 +64,7 @@ jobs:
    #   - run: bundle exec rake db:create
    #   - run: bundle exec rake db:schema:load
   test:         
-    <<: *default
+    <<: *defaults
 
     steps:
       - checkout
