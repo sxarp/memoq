@@ -16,14 +16,34 @@ default: &default
 
     working_directory: ~/repo
 
+references:
+  - restore_cache: &restore_code
+      key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+  - restore_cache: &restore_dependencies
+      keys:
+        - v1-dependencies-{{ checksum "Gemfile.lock" }}
+        - v1-dependencies-
+
+
+
+
+
 jobs:
-  build:
+  checkout_code:
+    <<: *default
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+
+  build_dependencies:
     <<: *default
 
     steps:
-      - checkout
+      - *restore_code
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "Gemfile.lock" }}
@@ -77,7 +97,10 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build
+      - checkout_code
+      - build_dependencies:
+          requires:
+            - checkout_code
       - test:
           requires:
-            - build
+            - build_dependencies
