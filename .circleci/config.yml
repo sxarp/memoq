@@ -25,9 +25,6 @@ references:
         - v1-dependencies-
 
 
-
-
-
 jobs:
   checkout_code:
     <<: *defaults
@@ -67,15 +64,13 @@ jobs:
     <<: *defaults
 
     steps:
-      - checkout
+      - restore_cache: &restore_code
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "Gemfile.lock" }}
           - v1-dependencies-
-      - run:
-          name: bundle install
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
       - run:
           name: rspec
           command: |
