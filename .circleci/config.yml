@@ -17,12 +17,16 @@ defaults: &defaults
     working_directory: ~/repo
 
 references:
-  - restore_cache: &restore_code
-      key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-  - restore_cache: &restore_dependencies
-      keys:
-        - v1-dependencies-{{ checksum "Gemfile.lock" }}
-        - v1-dependencies-
+  - restore_code: &restore_code
+      restore_cache:
+        key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+  - restore_dependencies: &restore_dependencies
+      restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-
+  - bundle_path: &bundle_path
+      run: bundle --path vendor/bundle
 
 
 jobs:
@@ -39,13 +43,8 @@ jobs:
     <<: *defaults
 
     steps:
-      - restore_cache: &restore_code
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          - v1-dependencies-
+      - *restore_code
+      - *restore_dependencies
 
       - run:
           name: install dependencies
@@ -64,14 +63,9 @@ jobs:
     <<: *defaults
 
     steps:
-      - restore_cache: &restore_code
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          - v1-dependencies-
-      - run: bundle --path vendor/bundle
+      - *restore_code
+      - *restore_dependencies
+      - *bundle_path
       - run:
           name: rspec
           command: |
