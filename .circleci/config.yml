@@ -84,6 +84,14 @@ jobs:
           path: /tmp/test-results
           destination: test-results
 
+  lint:
+    <<: *defaults
+    steps:
+      - *restore_code
+      - *restore_dependencies
+      - *bundle_path
+      - run: bundle exec rubocop
+
 workflows:
   version: 2
   build_and_deploy:
@@ -93,5 +101,8 @@ workflows:
           requires:
             - checkout_code
       - test:
+          requires:
+            - build_dependencies
+      - lint:
           requires:
             - build_dependencies
