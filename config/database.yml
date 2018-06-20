@@ -22,3 +22,4 @@ development:
 test:
   <<: *default
   database: memoq_test
+  timeout: 10000
