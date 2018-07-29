@@ -71,9 +71,7 @@ jobs:
           name: setup db
           # Execute `db:create` several times to workaround mysql connection error: Can't connect to MySQL server on '127.0.0.1' (111 "Connection refused")
           command: |
-            bundle exec rake db:create || true
-            bundle exec rake db:create || true
-            bundle exec rake db:create
+            for i in {1..5}; do bundle exec rails db:create || true; done
             bundle exec rake db:apply
       - run:
           name: rspec
