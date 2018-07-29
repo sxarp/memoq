@@ -11,7 +11,9 @@ defaults: &defaults
          auth:
            username: _json_key
            password: $GOOGLE_AUTH
-         env: RAILS_ENV=test
+         env:
+           - RAILS_ENV=test
+           - PROJECT_NAME=memoq-backend
        - image: mysql:5.7.22
          env:
            - MYSQL_ALLOW_EMPTY_PASSWORD=true
