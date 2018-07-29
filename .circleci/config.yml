@@ -7,7 +7,7 @@ version: 2
 defaults: &defaults
     working_directory: ~/repo
     docker:
-       - image: gcr.io/memoq-backend/ruby-gcloud:v1
+       - image: gcr.io/memoq-backend/ruby-gcloud:v4
          auth:
            username: _json_key
            password: $GOOGLE_AUTH
@@ -108,8 +108,7 @@ jobs:
           name: install dependencies
           command: |
             gcloud components list
-            echo test
-            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+            echo $GOOGLE_AUTH > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
             gcloud config set project $PROJECT_NAME
 
