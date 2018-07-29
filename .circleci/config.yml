@@ -7,7 +7,10 @@ version: 2
 defaults: &defaults
     working_directory: ~/repo
     docker:
-       - image: circleci/ruby:2.5.1-node-browsers
+       - image: gcr.io/memoq-backend/ruby-gcloud:v1
+         auth:
+           username: _json_key
+           password: $GOOGLE_AUTH
          env: RAILS_ENV=test
        - image: mysql:5.7.22
          env:
@@ -98,6 +101,18 @@ jobs:
       - *bundle_path
       - run: bundle exec rubocop
 
+  build_and_push_image:
+    <<: *defaults
+    steps:
+      - run:
+          name: install dependencies
+          command: |
+            gcloud components list
+            echo test
+            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+            gcloud config set project $PROJECT_NAME
+
 workflows:
   version: 2
   build_and_deploy:
@@ -112,3 +127,8 @@ workflows:
       - lint:
           requires:
             - build_dependencies
+      - build_and_push_image:
+          requires:
+            - build_dependencies
+            - lint
+            - test
