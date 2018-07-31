@@ -8,10 +8,8 @@ RUN apk add --update --no-cache \
     mysql-client \
     mariadb-dev \
     git \
-    imagemagick \
     nodejs-current \
-    yarn \
-    tzdata
+    yarn
 
 WORKDIR /app
 
@@ -35,7 +33,7 @@ ADD . /app
 # RUN RAILS_ENV=production SECRET_KEY_BASE=foo bundle exec rake assets:precompile
 
 # Remove folders not needed in resulting image
-RUN rm -rf node_modules tmp/cache app/assets vendor/assets lib/assets spec
+RUN rm -rf tmp/cache app/assets vendor/assets lib/assets spec
 
 ###############################
 # Stage Final
@@ -44,7 +42,6 @@ FROM ruby:2.5.1-alpine3.7
 # Add Alpine packages
 RUN apk add --update --no-cache \
     mysql-dev \
-    imagemagick \
     tzdata \
     file
 
