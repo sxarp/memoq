@@ -1,0 +1,24 @@
+#!bin/sh
+
+UTIL_FUNCTIONS=()
+
+function circleci_check_config(){
+  circleci config validate -c .circleci/config.yml
+}
+UTIL_FUNCTIONS+=("check_circle_ci")
+
+function docker_build_and_run(){
+  docker build .
+  LATEST_IMAGE="$(docker images | head -n 2 | tail -n 1)"
+  echo $LATEST_IMAGE
+  echo -en "\007"
+  docker run -p 3000:3000 -it "$(echo $LATEST_IMAGE | tail -n 1 | awk '{print $3}')"
+}
+UTIL_FUNCTIONS+=("docker_build_and_run")
+
+printf "Util functions loaded!\nThe following functions are now available:\n"
+
+for fn in "$UTIL_FUNCTIONS[@]"
+do
+  echo $fn
+done
