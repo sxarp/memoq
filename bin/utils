@@ -7,6 +7,11 @@ function circleci_check_config(){
 }
 UTIL_FUNCTIONS+=("check_circle_ci")
 
+function latest_image(){
+  echo $(docker images | head -n 2 | tail -n 1) | awk '{print $3}'
+}
+UTIL_FUNCTIONS+=("latest_image")
+
 function docker_build_and_run(){
   docker build .
   LATEST_IMAGE="$(docker images | head -n 2 | tail -n 1)"

@@ -7,7 +7,7 @@ version: 2
 defaults: &defaults
     working_directory: ~/repo
     docker:
-       - image: gcr.io/memoq-backend/ruby-gcloud:v4
+       - image: gcr.io/memoq-backend/ruby-gcloud:v6
          auth:
            username: _json_key
            password: $GOOGLE_AUTH
@@ -30,7 +30,6 @@ references:
           - v1-dependencies-
   - bundle_path: &bundle_path
       run: bundle --path vendor/bundle
-
 
 jobs:
   checkout_code:
@@ -112,10 +111,14 @@ jobs:
             echo $GOOGLE_AUTH > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
             gcloud config set project $PROJECT_NAME
+            gcloud container clusters get-credentials resources-v1-my-cluster --zone asia-northeast1-c
       - run:
-          name: build_image
+          name: build_and_deploy_image
           command: |
-            gcloud builds submit --tag "gcr.io/memoq-backend/rails:test$(date '+%Y-%m-%d-%H-%M')" . --quiet
+            tag=$(date '+%Y-%m-%d-%H-%M')
+            image_name="gcr.io/memoq-backend/rails:${tag}"
+            gcloud builds submit --tag $image_name . --quiet
+            kubectl patch deployment rails --type merge --patch '{"spec": {"template": {"spec": {"containers": [{"image": "'"${image_name}"'", "name": "rails"}]}}}}'
 
 workflows:
   version: 2

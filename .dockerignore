@@ -1,0 +1,6 @@
+.git
+tmp/cache
+app/assets
+vendor/assets
+lib/assets
+spec
