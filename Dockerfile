@@ -27,13 +27,13 @@ RUN bundle config --global frozen 1 \
 # RUN yarn install
 
 # Add the Rails app
-ADD . /app
+# ADD . /app
 
 # Precompile assets
 # RUN RAILS_ENV=production SECRET_KEY_BASE=foo bundle exec rake assets:precompile
 
 # Remove folders not needed in resulting image
-RUN rm -rf tmp/cache app/assets vendor/assets lib/assets spec
+# RUN rm -rf tmp/cache app/assets vendor/assets lib/assets spec
 
 ###############################
 # Stage Final
@@ -43,16 +43,19 @@ FROM ruby:2.5.1-alpine3.7
 RUN apk add --update --no-cache \
     mysql-dev \
     tzdata \
-    file
+    file \
+    curl
 
 # Add user
-RUN addgroup -g 1000 -S app \
- && adduser -u 1000 -S app -G app
-USER app
+#RUN addgroup -g 1000 -S app \
+# && adduser -u 1000 -S app -G app
+#USER app
 
 # Copy app with gems from former build stage
 COPY --from=Builder /usr/local/bundle/ /usr/local/bundle/
-COPY --from=Builder --chown=app:app /app /app
+# COPY --from=Builder --chown=app:app /app /app
+
+ADD . /app
 
 # Set Rails env
 ENV RAILS_LOG_TO_STDOUT true
@@ -70,5 +73,6 @@ RUN date -u > BUILD_TIME
 # Start up
 
 ENV RAILS_ENV staging
+ENV SECRET_KEY_BASE=hoge
 
 CMD ["rails", "s"]
