@@ -105,19 +105,26 @@ jobs:
     steps:
       - *restore_code
       - run:
-          name: install dependencies
+          name: setup gcloud
           command: |
-            gcloud components list
             echo $GOOGLE_AUTH > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
             gcloud config set project $PROJECT_NAME
             gcloud container clusters get-credentials resources-v1-my-cluster --zone asia-northeast1-c
       - run:
-          name: build_and_deploy_image
+          name: update builder
           command: |
-            tag=$(date '+%Y-%m-%d-%H-%M')
-            image_name="gcr.io/memoq-backend/rails:${tag}"
-            gcloud builds submit --tag $image_name . --quiet
+            gcloud builds submit --config .circleci/cloud_builder_build.yml .
+      - run:
+          name: build image
+          command: |
+            gcloud builds submit --config cloudbuild.yml .
+
+      - run:
+          name: tag and deploy
+          command: |
+            image_name="gcr.io/memoq-backend/rails:$(date '+%Y-%m-%d-%H-%M')"
+            gcloud container images add-tag gcr.io/memoq-backend/rails:latest $image_name --quiet
             kubectl patch deployment rails --type merge --patch '{"spec": {"template": {"spec": {"containers": [{"image": "'"${image_name}"'", "name": "rails"}]}}}}'
 
 workflows:

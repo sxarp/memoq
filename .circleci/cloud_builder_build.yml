@@ -1,0 +1,12 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['pull', 'gcr.io/memoq-backend/rails_builder:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+            'build',
+            '-t', 'gcr.io/memoq-backend/rails:latest',
+            '--cache-from', 'gcr.io/memoq-backend/rails_builder:latest',
+            '.',
+            '-f', '.circleci/builder_dockerfile'
+        ]
+images: ['gcr.io/memoq-backend/rails_builder:latest']
