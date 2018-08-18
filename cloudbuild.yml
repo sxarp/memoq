@@ -1,0 +1,14 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['pull', 'gcr.io/memoq-backend/rails_builder:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['pull', 'gcr.io/memoq-backend/rails:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+            'build',
+            '-t', 'gcr.io/memoq-backend/rails:latest',
+            '--cache-from', 'gcr.io/memoq-backend/rails_builder:latest',
+            '--cache-from', 'gcr.io/memoq-backend/rails:latest',
+            '.'
+        ]
+images: ['gcr.io/memoq-backend/rails:latest']

@@ -1,5 +1,3 @@
-######################
-# Stage: Builder
 FROM ruby:2.5.1-alpine3.7 as Builder
 
 RUN apk add --update --no-cache \
@@ -16,11 +14,11 @@ WORKDIR /app
 # Install gems
 ADD Gemfile* /app/
 RUN bundle config --global frozen 1 \
- && bundle install --without development test -j4 --retry 3 \
- # Remove unneeded files (cached *.gem, *.o, *.c)
- && rm -rf /usr/local/bundle/cache/*.gem \
- && find /usr/local/bundle/gems/ -name "*.c" -delete \
- && find /usr/local/bundle/gems/ -name "*.o" -delete
+    && bundle install --without development test -j4 --retry 3 \
+    # Remove unneeded files (cached *.gem, *.o, *.c)
+    && rm -rf /usr/local/bundle/cache/*.gem \
+    && find /usr/local/bundle/gems/ -name "*.c" -delete \
+    && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 # Install yarn packages
 # COPY package.json yarn.lock /app/
@@ -56,13 +54,7 @@ ENV EXECJS_RUNTIME Disabled
 
 WORKDIR /app
 
-# Expose Puma port
 EXPOSE 3000
-
-# Save timestamp of image building
-RUN date -u > BUILD_TIME
-
-# Start up
 
 ENV RAILS_ENV staging
 ENV SECRET_KEY_BASE=hoge
