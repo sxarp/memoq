@@ -32,9 +32,10 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "mysql2"
 gem "ridgepole"
 
-group :development, :test do
+group :development, :staging, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
+  gem "listen", ">= 3.0.5", "< 3.2"
   gem "pry"
   gem "pry-byebug"
   gem "rspec-rails"
@@ -42,7 +43,6 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "listen", ">= 3.0.5", "< 3.2"
   gem "web-console", ">= 3.3.0"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "onkcop", require: false
