@@ -100,7 +100,7 @@ jobs:
       - *bundle_path
       - run: bundle exec rubocop
 
-  build_and_push_image:
+  build_and_push_image: &build_and_push_image
     <<: *defaults
     steps:
       - *restore_code
@@ -130,6 +130,9 @@ jobs:
             gcloud container images add-tag gcr.io/memoq-backend/rails:latest "${image_name}:${tag}" --quiet
             helm upgrade --install backend chart --set image.db_user=root --set image.db_password=$DB_PASSWORD --set image.tag=$tag
 
+  auto_deploy:
+    <<: *build_and_push_image
+
 workflows:
   version: 2
   build_and_deploy:
@@ -152,3 +155,12 @@ workflows:
       - build_and_push_image:
           requires:
             - hold_build_and_push_image
+      - auto_deploy:
+          requires:
+            - lint
+            - test
+          filters:
+            branches:
+              only:
+                - develop
+                - /.*-deploy/
