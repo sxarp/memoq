@@ -4,21 +4,6 @@
 #
 version: 2
 
-defaults: &defaults
-    working_directory: ~/repo
-    docker:
-       - image: gcr.io/memoq-backend/ruby-gcloud:v7
-         auth:
-           username: _json_key
-           password: $GOOGLE_AUTH
-         env:
-           - RAILS_ENV=test
-           - PROJECT_NAME=memoq-backend
-       - image: mysql:5.7.22
-         env:
-           - MYSQL_ALLOW_EMPTY_PASSWORD=true
-           - MYSQL_ROOT_HOST=127.0.0.1
-
 references:
   - restore_code: &restore_code
       restore_cache:
@@ -30,6 +15,28 @@ references:
           - v1-dependencies-
   - bundle_path: &bundle_path
       run: bundle --path vendor/bundle
+  - main_image: &main_image
+      image: gcr.io/memoq-backend/ruby-gcloud:v7
+      auth:
+        username: _json_key
+        password: $GOOGLE_AUTH
+      env:
+        - RAILS_ENV=test
+        - PROJECT_NAME=memoq-backend
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - *main_image
+
+defaults_with_mysql: &defaults_with_mysql
+  working_directory: ~/repo
+  docker:
+    - *main_image
+    - image: mysql:5.7.22
+      env:
+        - MYSQL_ALLOW_EMPTY_PASSWORD=true
+        - MYSQL_ROOT_HOST=127.0.0.1
 
 jobs:
   checkout_code:
@@ -62,7 +69,7 @@ jobs:
    #   - run: bundle exec rake db:create
    #   - run: bundle exec rake db:schema:load
   test:         
-    <<: *defaults
+    <<: *defaults_with_mysql
 
     steps:
       - *restore_code
@@ -72,7 +79,7 @@ jobs:
           name: setup db
           # Execute `db:create` several times to workaround mysql connection error: Can't connect to MySQL server on '127.0.0.1' (111 "Connection refused")
           command: |
-            for i in {1..15}; do bundle exec rails db:create && sleep 1 || true; done
+            for i in {1..25}; do bundle exec rails db:create && sleep 1 || true; done
             bundle exec rake db:apply
       - run:
           name: rspec
