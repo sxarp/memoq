@@ -29,19 +29,19 @@ gem "jbuilder", "~> 2.5"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 
-gem "mysql2"
-gem "ridgepole"
+gem "mysql2", "~> 0.5.1"
+gem "ridgepole", "~> 0.7.2"
 
-gem "graphql"
-gem "turbolinks"
+gem "graphql", "~> 1.8.5"
+gem "turbolinks", "~> 5.1.1"
 
 group :development, :test, :staging do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "listen", ">= 3.0.5", "< 3.2"
-  gem "pry"
-  gem "pry-byebug"
-  gem "rspec-rails"
-  gem "bullet"
+  gem "pry", "~> 0.11.3"
+  gem "pry-byebug", "~> 3.6.0"
+  gem "rspec-rails", "~> 3.7.2"
+  gem "bullet", "~> 5.7.6"
 end
 
 group :development do
@@ -49,13 +49,13 @@ group :development do
   gem "web-console", ">= 3.3.0"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "onkcop", require: false
-  gem "spring"
+  gem "spring", "~> 2.0.2"
   gem "spring-watcher-listen", "~> 2.0.0"
 end
 
 group :test do
-  gem "database_cleaner"
-  gem "rspec_junit_formatter"
+  gem "database_cleaner", "~> 1.7.0"
+  gem "rspec_junit_formatter", "~> 0.4.1"
 end
 
-gem "graphiql-rails", group: :development
+gem "graphiql-rails", "~> 1.4.10", group: :development
