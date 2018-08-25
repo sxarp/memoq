@@ -36,12 +36,12 @@ gem "graphql", "~> 1.8.5"
 gem "turbolinks", "~> 5.1.1"
 
 group :development, :test, :staging do
+  gem "bullet", "~> 5.7.6"
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "pry", "~> 0.11.3"
   gem "pry-byebug", "~> 3.6.0"
   gem "rspec-rails", "~> 3.7.2"
-  gem "bullet", "~> 5.7.6"
 end
 
 group :development do
