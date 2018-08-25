@@ -136,6 +136,7 @@ jobs:
             tag="$(date '+%Y-%m-%d-%H-%M')"
             gcloud container images add-tag gcr.io/memoq-backend/rails:latest "${image_name}:${tag}" --quiet
             helm upgrade --install backend chart --set image.db_user=root --set image.db_password=$DB_PASSWORD --set image.tag=$tag
+            ./.circleci/migrator.sh "${image_name}:${tag}"
 
   auto_deploy:
     <<: *build_and_push_image
