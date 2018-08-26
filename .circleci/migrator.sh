@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxoC pipefail
+set -euxCo pipefail
 
 function get_running_backend_pod(){
     local -r image_name="$1"
