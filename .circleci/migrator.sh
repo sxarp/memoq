@@ -10,7 +10,7 @@ function get_running_backend_pod(){
 function exec_migration_to_pod(){
     local -r pod_name="$1"
     kubectl exec "$pod_name" --container backend -- /bin/sh -c \
-            'cd /app && bundle exec ridgepole -c config/database.yml --apply -E staging -f db/Schemafile'
+            'cd /app && RAILS_ENV=staging bundle exec rake db:apply'
 }
 
 function exec_migration(){
