@@ -35,12 +35,12 @@ gem "ridgepole"
 gem "awesome_print", require: "ap"
 
 group :development, :test, :staging do
+  gem "bullet"
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "pry"
   gem "pry-byebug"
   gem "rspec-rails"
-  gem "bullet"
 end
 
 group :development do
