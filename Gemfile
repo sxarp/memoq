@@ -29,20 +29,18 @@ gem "jbuilder", "~> 2.5"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 
-gem "mysql2", "~> 0.5.1"
-gem "ridgepole", "~> 0.7.2"
+gem "mysql2"
+gem "ridgepole"
 
-gem "awesome_print", "~> 1.8.0", require: "ap"
-gem "graphql", "~> 1.8.5"
-gem "turbolinks", "~> 5.1.1"
+gem "awesome_print", require: "ap"
 
 group :development, :test, :staging do
-  gem "bullet", "~> 5.7.6"
+  gem "bullet"
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "listen", ">= 3.0.5", "< 3.2"
-  gem "pry", "~> 0.11.3"
-  gem "pry-byebug", "~> 3.6.0"
-  gem "rspec-rails", "~> 3.7.2"
+  gem "pry"
+  gem "pry-byebug"
+  gem "rspec-rails"
 end
 
 group :development do
@@ -55,13 +53,11 @@ group :development do
   gem "brakeman"
   gem "bundler-audit"
   gem "onkcop", require: false
-  gem "spring", "~> 2.0.2"
+  gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
 end
 
 group :test do
-  gem "database_cleaner", "~> 1.7.0"
-  gem "rspec_junit_formatter", "~> 0.4.1"
+  gem "database_cleaner"
+  gem "rspec_junit_formatter"
 end
-
-gem "graphiql-rails", "~> 1.4.10", group: :development
