@@ -40,6 +40,7 @@ group :development, :test, :staging do
   gem "pry"
   gem "pry-byebug"
   gem "rspec-rails"
+  gem "bullet"
 end
 
 group :development do
