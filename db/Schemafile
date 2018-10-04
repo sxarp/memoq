@@ -1,4 +1,4 @@
-create_table "articles", force: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+create_table "articles", force: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
   t.string   "title"
   t.text   "content"
   t.integer  "status"
