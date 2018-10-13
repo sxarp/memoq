@@ -65,3 +65,8 @@ RSpec.configure do |config|
     end
   end
 end
+
+# for writing simple request specs
+def json_resp
+  JSON.parse(response.body)["data"]
+end
