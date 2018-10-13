@@ -35,6 +35,8 @@ gem "ridgepole"
 
 gem "awesome_print", require: "ap"
 
+gem "rack-cors"
+
 group :development, :test, :staging do
   gem "bullet"
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
