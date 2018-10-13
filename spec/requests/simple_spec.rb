@@ -6,7 +6,7 @@ RSpec.describe "Simple", type: :request do
       get "/simple"
       aggregate_failures do
         expect(response.status).to be(200)
-        expect(JSON.parse(response.body)).to eq({ "data" => { "id" => "1", "type" => "simple", "attributes" => { "content" => "simple" } } })
+        expect(json_resp).to eq({ "id" => "1", "type" => "simple", "attributes" => { "content" => "simple" } })
       end
     end
   end
