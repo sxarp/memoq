@@ -6,9 +6,9 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [
             'build',
-            '-t', 'gcr.io/memoq-backend/rails:latest',
+            '-t', "gcr.io/memoq-backend/rails:${TAG_NAME}",
             '--cache-from', 'gcr.io/memoq-backend/rails_builder:latest',
             '--cache-from', 'gcr.io/memoq-backend/rails:latest',
             '.'
         ]
-images: ['gcr.io/memoq-backend/rails:latest']
+images: ["gcr.io/memoq-backend/rails:${TAG_NAME}"]
