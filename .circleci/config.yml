@@ -112,12 +112,14 @@ jobs:
     steps:
       - *restore_code
       - run:
-          name: setup gcloud and helm
+          name: setup gcloud and helm and kubectl
           command: |
             echo $GOOGLE_AUTH > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
             gcloud config set project $PROJECT_NAME
-            gcloud container clusters get-credentials resources-v1-my-cluster --zone asia-northeast1-c
+            gcloud container clusters get-credentials resources-v2-my-cluster --zone asia-northeast1-c
+            namespace=development
+            kubectl config set-context $(kubectl config current-context) --namespace=$namespace
             helm init --client-only
             helm repo update
       - run:
@@ -127,16 +129,17 @@ jobs:
       - run:
           name: build image
           command: |
-            gcloud builds submit --config cloudbuild.yml .
+            hash=$(git rev-parse HEAD)
+            gcloud builds submit --config cloudbuild.yml . --substitutions=TAG_NAME=$hash
 
       - run:
-          name: tag and deploy
+          name: deploy and migrate
           command: |
+            hash=$(git rev-parse HEAD)
             image_name=gcr.io/memoq-backend/rails
-            tag="$(date '+%Y-%m-%d-%H-%M')"
-            gcloud container images add-tag gcr.io/memoq-backend/rails:latest "${image_name}:${tag}" --quiet
-            helm upgrade --install backend chart --set image.db_user=root --set image.db_password=$DB_PASSWORD --set image.tag=$tag
-            ./.circleci/migrator.sh "${image_name}:${tag}"
+            helm template --name=backend chart --set image.db_user=root --set image.db_password=$DB_PASSWORD --set image.tag=$hash \
+            | kubectl apply -f -
+            ./.circleci/migrator.sh "${image_name}:${hash}"
 
   auto_deploy:
     <<: *build_and_push_image
