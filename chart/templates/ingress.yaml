@@ -1,4 +1,4 @@
-{{- $fullName := include "backend.fullname" . -}}
+{{- $fullName := include "backend.name" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -19,5 +19,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: {{ template "backend.fullname" . }}
+          serviceName: {{ template "backend.name" . }}
           servicePort: {{ .Values.service.port }}

@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "backend-proxy.name" . }}-sql-proxy
+  labels:
+    app: {{ template "backend-proxy.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.sqlproxy.replicasCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "backend-proxy.name" . }}
+    spec:
+      containers:
+      - name: sqlproxy
+        image: "{{ .Values.sqlproxy.image }}:{{ .Values.sqlproxy.imageTag }}"
+        imagePullPolicy: {{ default "" .Values.sqlproxy.imagePullPolicy | quote }}
+        resources:
+{{ toYaml .Values.sqlproxy.resources | indent 10 }}
+        command:
+        - /cloud_sql_proxy
+        - --dir=/cloudsql
+        - -instances={{- range .Values.sqlproxy.instances -}}
+                        {{ .project }}:{{ .region }}:{{ .instance }}=tcp:0.0.0.0:{{ .port }},
+                     {{- end }}
+        - -credential_file=/secrets/cloudsql/credentials.json
+        ports:
+        {{- range .Values.sqlproxy.instances }}
+        - name: {{ .instanceShortName | default (.instance | trunc 15) }}
+          containerPort: {{ .port }}
+        {{- end }}
+        volumeMounts:
+        - name: cloudsql-oauth-credentials
+          mountPath: /secrets/cloudsql
+        - name: cloudsql
+          mountPath: /cloudsql
+      volumes:
+        - name: cloudsql-oauth-credentials
+          secret:
+            secretName: {{ default (include "backend.name" .) }}
+            items:
+              - key: credentials_json
+                path: credentials.json
+        - name: cloudsql
+          emptyDir: {}

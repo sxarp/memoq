@@ -137,7 +137,8 @@ jobs:
           command: |
             hash=$(git rev-parse HEAD)
             image_name=gcr.io/memoq-backend/rails
-            helm template --name=backend chart --set image.db_user=root --set image.db_password=$DB_PASSWORD --set image.tag=$hash \
+            helm template chart --set image.db_user=root --set image.db_password=$DB_PASSWORD --set image.tag=$hash \
+            --set sqlproxy.credentials=$SQLPROXY_CREDENTIALS \
             | kubectl apply -f -
             ./.circleci/migrator.sh "${image_name}:${hash}"
 

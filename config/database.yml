@@ -12,7 +12,7 @@ development:
 
 staging:
   <<: *default
-  host: pg-sqlproxy-gcloud-sqlproxy.sqlproxy
+  host: backend-proxy
   database: memoq_staging
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
