@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+name: "backend"
+
 image:
   repository: gcr.io/memoq-backend/rails
   tag: latest
@@ -33,8 +35,16 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+sqlproxy:
+  image: b.gcr.io/cloudsql-docker/gce-proxy
+  imageTag: "1.11"
+  imagePullPolicy: IfNotPresent
+  serviceAccountKey: ""
+  replicasCount: 1
+  credentials: ""
+  instances:
+    - instance: "test-mysql"
+      instanceShortName: ""
+      project: "memoq-backend"
+      region: "asia-northeast1"
+      port: 3306

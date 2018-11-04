@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "backend.fullname" . }}
+  name: {{ template "backend.name" . }}
   labels:
     app: {{ template "backend.name" . }}
     chart: {{ template "backend.chart" . }}
@@ -27,12 +27,12 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "backend.fullname" . }}
+                  name: {{ template "backend.name" . }}
                   key: db_user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "backend.fullname" . }}
+                  name: {{ template "backend.name" . }}
                   key: db_password
           ports:
             - name: http
