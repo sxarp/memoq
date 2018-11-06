@@ -29,7 +29,7 @@ defaults: &defaults
   docker:
     - *main_image
 
-defaults_with_mysql: &defaults_with_mysql
+defaults_for_testing: &defaults_for_testing
   working_directory: ~/repo
   docker:
     - *main_image
@@ -37,6 +37,7 @@ defaults_with_mysql: &defaults_with_mysql
       env:
         - MYSQL_ALLOW_EMPTY_PASSWORD=true
         - MYSQL_ROOT_HOST=127.0.0.1
+    - image: redis:5.0.0
 
 jobs:
   checkout_code:
@@ -69,7 +70,7 @@ jobs:
    #   - run: bundle exec rake db:create
    #   - run: bundle exec rake db:schema:load
   test:         
-    <<: *defaults_with_mysql
+    <<: *defaults_for_testing
 
     steps:
       - *restore_code

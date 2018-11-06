@@ -15,6 +15,10 @@ gem "uglifier", ">= 1.3.0"
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.5"
+
+gem "hiredis"
+gem "redis"
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
@@ -44,7 +48,6 @@ group :development, :test, :staging do
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "pry"
   gem "pry-byebug"
-  gem "rspec-rails"
 end
 
 group :development do
@@ -62,5 +65,7 @@ end
 
 group :test do
   gem "database_cleaner"
+  gem "rails-controller-testing"
+  gem "rspec-rails"
   gem "rspec_junit_formatter"
 end

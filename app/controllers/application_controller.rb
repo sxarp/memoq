@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include CurrentContext
+
   private
 
     def respond(serializer_class, object)
