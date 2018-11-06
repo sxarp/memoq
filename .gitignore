@@ -30,3 +30,5 @@
 /config/master.key
 /vendor
 GTAGS
+GPATH
+GRTAGS
