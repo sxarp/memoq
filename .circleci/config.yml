@@ -108,7 +108,7 @@ jobs:
       - *bundle_path
       - run: bundle exec rubocop
 
-  build_and_push_image: &build_and_push_image
+  deploy_staging: &deploy_staging
     <<: *defaults
     steps:
       - *restore_code
@@ -144,7 +144,7 @@ jobs:
             ./.circleci/migrator.sh "${image_name}:${hash}"
 
   auto_deploy:
-    <<: *build_and_push_image
+    <<: *deploy_staging
 
 workflows:
   version: 2
@@ -160,14 +160,14 @@ workflows:
       - lint:
           requires:
             - build_dependencies
-      - hold_build_and_push_image:
+      - hold_deploy_staging:
           type: approval
           requires:
             - lint
             - test
-      - build_and_push_image:
+      - deploy_staging:
           requires:
-            - hold_build_and_push_image
+            - hold_deploy_staging
       - auto_deploy:
           requires:
             - lint
