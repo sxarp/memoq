@@ -48,3 +48,7 @@ sqlproxy:
       project: "memoq-backend"
       region: "asia-northeast1"
       port: 3306
+
+redisCluster:
+  replicas: 3
+  image: redis:5.0-rc

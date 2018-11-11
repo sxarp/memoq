@@ -17,7 +17,9 @@ gem "uglifier", ">= 1.3.0"
 gem "jbuilder", "~> 2.5"
 
 gem "hiredis"
-gem "redis"
+
+# for cluster support
+gem "redis", "4.1.0.beta1"
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
