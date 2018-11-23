@@ -23,7 +23,7 @@ Rails.application.configure do
 
   # configure caching using redis
   config.action_controller.perform_caching = true
-  config.cache_store = :redis_cache_store, { url: "redis://localhost:6379" }
+  config.cache_store = :redis_cache_store, { url: "redis://someserver.com:6379" }
   config.session_store :cache_store, key: ENV["APP_SESSION_KEY"]
 
   # Raise exceptions instead of rendering exception templates.
