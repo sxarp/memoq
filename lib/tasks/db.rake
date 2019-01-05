@@ -1,7 +1,14 @@
 namespace :db do
-  desc "Apply ridgepole"
-  task apply: :environment do
-    system "bundle exec ridgepole -c config/database.yml --apply -E #{Rails.env} -f db/Schemafile"
-    system "bundle exec annotate --exclude tests,fixtures,factories,serializers"
+  namespace :ensure do
+    task apply: :environment do
+      desc "Apply ridgepole"
+      system "bundle exec ridgepole -c config/database.yml --apply -E #{Rails.env} -f db/Schemafile.rb"
+      system "bundle exec annotate --exclude tests,fixtures,factories,serializers"
+    end
+
+    task dry_run: :environment do
+      desc "Dry run ridge pole"
+      system "bundle exec ridgepole -c config/database.yml --apply -E #{Rails.env} -f db/Schemafile.rb --dry_run"
+    end
   end
 end
