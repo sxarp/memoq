@@ -64,6 +64,9 @@ RSpec.configure do |config|
       example.run
     end
   end
+
+  # Config for factory bot.
+  config.include FactoryBot::Syntax::Methods
 end
 
 # for writing simple request specs

@@ -10,3 +10,8 @@ create_table "articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSE
   t.datetime "created_at"
   t.datetime "updated_at"
 end
+
+create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
+  t.datetime "created_at"
+  t.datetime "updated_at"
+end
