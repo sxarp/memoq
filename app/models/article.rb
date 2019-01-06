@@ -6,8 +6,8 @@
 #  title      :string(255)
 #  content    :text(65535)
 #  status     :integer
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 class Article < ApplicationRecord
