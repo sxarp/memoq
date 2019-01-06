@@ -11,4 +11,6 @@
 #
 
 class ProblemRevisionQuestion < ApplicationRecord
+  belongs_to :problem_revision
+  belongs_to :question
 end

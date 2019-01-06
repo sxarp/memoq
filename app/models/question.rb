@@ -10,4 +10,6 @@
 #
 
 class Question < ApplicationRecord
+  has_many :problem_revision_questions
+  has_many :questions
 end

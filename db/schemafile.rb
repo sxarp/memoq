@@ -95,9 +95,9 @@ Tables::Users.create_table
 
 Tables::Problems.create_table_belonging(Tables::Users)
 
-Tables::ProblemRevisions.create_table_belonging(Tables::Problems)
+Tables::ProblemRevisions.create_table_belonging(Tables::Problems, Tables::ProblemDescriptions)
 
-Tables::ProblemDescriptions.create_table_belonging(Tables::ProblemRevisions) do |t|
+Tables::ProblemDescriptions.create_table do |t|
   t.string "title"
   t.text "description"
 end
