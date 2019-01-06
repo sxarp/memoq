@@ -75,6 +75,11 @@ GEM
     diffy (3.2.1)
     erubi (1.7.1)
     execjs (2.7.0)
+    factory_bot (4.11.1)
+      activesupport (>= 3.0.0)
+    factory_bot_rails (4.11.1)
+      factory_bot (~> 4.11.1)
+      railties (>= 3.0.0)
     fast_jsonapi (1.4)
       activesupport (>= 4.2)
     ffi (1.9.25)
@@ -238,6 +243,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   database_cleaner
+  factory_bot_rails
   fast_jsonapi
   hiredis
   jbuilder (~> 2.5)
