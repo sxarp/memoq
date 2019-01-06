@@ -1,3 +1,6 @@
+# Execure DDL using ridgepole gem: https://github.com/winebarrel/ridgepole
+# This file is refered by the rake tasks: db:ensure:*.
+
 require "active_support/inflector"
 
 CREATE_TABLE_METHOD = self.method(:create_table)
