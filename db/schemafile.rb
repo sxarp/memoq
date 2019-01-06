@@ -1,4 +1,9 @@
-create_table "articles", force: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
+# Force option:
+# >:force
+# >Set to true to drop the table before creating it. Set to :cascade to drop dependent objects as well. Defaults to false.
+# https://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-create_table
+
+create_table "articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
   t.string   "title"
   t.text "content"
   t.integer  "status"
