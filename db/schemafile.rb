@@ -1,8 +1,3 @@
-# Force option:
-# >:force
-# >Set to true to drop the table before creating it. Set to :cascade to drop dependent objects as well. Defaults to false.
-# https://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-create_table
-
 require "active_support/inflector"
 
 CREATE_TABLE_METHOD = self.method(:create_table)
@@ -25,6 +20,9 @@ module Tables
     # @return Table
     #
     def create_table_belonging(*foreign_tables)
+      # About force: :cascase
+      # >Set to true to drop the table before creating it. Set to :cascade to drop dependent objects as well. Defaults to false.
+      # https://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-create_table
       CREATE_TABLE_METHOD.call self.to_s, force: :cascade, options: DEFAULT_OPTIONS do |table|
         yield table if block_given?
 
