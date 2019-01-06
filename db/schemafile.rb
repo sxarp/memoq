@@ -30,7 +30,7 @@ module Tables
         table.datetime "updated_at", null: false
 
         foreign_tables.each do |foreign_table|
-          table.bigint foreign_table.foreign_key_name
+          table.bigint foreign_table.foreign_key_name, null: false
         end
       end
 
