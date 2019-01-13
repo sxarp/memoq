@@ -6,6 +6,7 @@ require "active_support/inflector"
 CREATE_TABLE_METHOD = self.method(:create_table)
 ADD_FOREIGN_KEY_METHOD = self.method(:add_foreign_key)
 ADD_INDEX_METHOD = self.method(:add_index)
+
 module Tables
   class Table
     DEFAULT_OPTIONS = "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin".freeze
@@ -78,16 +79,23 @@ module Tables
     end
   end
 
+  # Defined as a sample.
   Articles = Table.new("articles")
+
   Users = Table.new("users")
   Problems = Table.new("problems")
-  ProblemRevisions = Table.new("problem_revisions")
-  ProblemDescriptions = Table.new("problem_descriptions")
+  ProblemTitles = Table.new("problem_titles")
+  Titles = Table.new("titles")
+  ProblemQuestions = Table.new("problem_questions")
   Questions = Table.new("questions")
-  ProblemRevisionQuestions = Table.new("problem_revision_questions")
   Choices = Table.new("choices")
+
+  Threads = Table.new("threads")
+  Coordinates = Table.new("coordinates")
+  Items = Table.new("items")
 end
 
+# Defined as a sample.
 Tables::Articles.create_table do |t|
   t.string "title"
   t.text "content"
@@ -96,29 +104,31 @@ end
 
 Tables::Users.create_table
 
+Tables::Items.create_table
+
 Tables::Problems.create_table_belonging(Tables::Users)
 
-Tables::ProblemRevisions.create_table_belonging(Tables::Problems, Tables::ProblemDescriptions)
+Tables::Titles.create_table
 
-Tables::ProblemDescriptions.create_table do |t|
-  t.string "title"
-  t.text "description"
-end
+Tables::ProblemTitles.create_table_belonging(
+  Tables::Problems,
+  Tables::Titles,
+).add_index(Tables::Problems.foreign_key_name, Tables::Titles.foreign_key_name, unique: true)
 
 Tables::Questions.create_table do |t|
   t.text "description"
   t.text "explanation"
 end
 
-Tables::ProblemRevisionQuestions.create_table_belonging(
-  Tables::ProblemRevisions,
-  Tables::Questions,
-) do |t|
-  t.integer "order"
-end.add_index(Tables::ProblemRevisions.foreign_key_name, Tables::Questions.foreign_key_name, unique: true)
-
 Tables::Choices.create_table_belonging(Tables::Questions) do |t|
   t.integer "order"
   t.boolean "check"
   t.text "description"
+end
+
+Tables::Threads.create_table
+
+Tables::Coordinates.create_table_belonging(Tables::Threads, Tables::Items) do |t|
+  t.integer "order"
+  t.integer "revision"
 end
