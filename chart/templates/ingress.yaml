@@ -1,14 +1,10 @@
-{{- $fullName := include "backend.name" . -}}
-{{- $ingressPath := .Values.ingress.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: backend-ingress
   labels:
     app: {{ template "backend.name" . }}
     chart: {{ template "backend.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
 {{- with .Values.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
